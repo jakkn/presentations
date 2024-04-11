@@ -1,0 +1,174 @@
+center =================================================================
+ ______              _           __  __       __
+/_  __/__ ______ _  (_)__  ___ _/ / / /____  / /_
+ / / / -_) __/  ' \/ / _ \/ _ `/ / / __/ _ \/ __/
+/_/  \__/_/ /_/_/_/_/_//_/\_,_/_/  \__/_//_/\__/
+
+
+<b>Jakob Knutsen<r>
+
+2024
+
+center =================================================================
+<b>Tips and tricks you can do in the terminal for fun and profit<r>
+
+center =================================================================
+
+Terminal.
+
+Shell.
+
+What is the difference?
+
+block =================================================================
+
+Terminal
+
+<i>The thing you write in<r>.
+
+Manages things like colors, fonts, tabs, bells & whistles etc.
+
+Examples:
+
+• xterm
+• termite
+• alacritty
+• st
+• urxvt
+• Terminal (macOS default)
+
+block =================================================================
+
+Shell
+
+<i>How you write it<r>.
+
+Key bindings, navigation, globs, configs, completion, look and feel, style and syntax.
+
+Examples:
+
+• sh (old, avoid)
+• bash (installed everywhere, do use)
+• zsh (macOS default, highly customizable)
+• fish
+
+block ==================================================================
+<b>Essentials<r>
+
+• <b>Tab<r> to autocomplete
+• <b>Ctrl+r<r> to search through command history
+• <b>Ctrl+c<r> to clear the prompt
+• Use <b>--help<r> or <b>man<r> pages
+
+block ==================================================================
+<b>Redirection<r>
+
+• <b>><r> and <b><<r> direct input / output. Think of it like funnels
+• <b>><r> overwrites the output file
+• <b>>><r> appends
+• <b>|<r> pipe to stdin. Think of it like function arguments, only instead of `foo(bar)` you do `bar | foo`
+
+block ==================================================================
+Standard utils:
+
+• cd - change dir
+• pwd - print working directory
+• pushd, popd, dirs - jump between recent dirs
+• cp - copy
+• cat - concatenate files and print to stdout
+• echo - display a line of text
+• mv - move files
+• rm - remove files (caution, no trashcan)
+• tree - print directory tree
+• touch - create file
+• mkdir - create dir
+• head
+• tail
+• less
+
+code bash ==============================================================
+
+# aliases
+#
+# .bashrc
+# .zshrc
+# .gitconfig
+alias
+
+# examples
+
+-='cd -'
+...=../..
+....=../../..
+.....=../../../..
+1='cd -1'
+2='cd -2'
+3='cd -3'
+
+git ls # ls = log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%C(cyan)\\ [%cn]" --decorate --date=relative
+
+block ==================================================================
+Editors:
+
+• vim
+
+Yeah that\'s it, no other options.
+
+block ==================================================================
+Text manipulation tools:
+
+• sed
+• awk
+• tr
+• perl
+
+block ==================================================================
+Handy utils:
+
+* fzf - fuzzyfind
+• locate - find anything on your system
+• whereis / which
+• pgrep & pkill
+• jq & yq - json and yaml parsers
+• entr - filewatcher, like adding a --watch flag to any command
+
+block ==================================================================
+Modern replacements:
+
+• exa (ls)
+• fdfind (find)
+• ripgrep (grep)
+
+code bash ==============================================================
+
+# delete all files named index.ts
+fd index.ts ~/dev/myProject/ --exec rm
+
+code bash ==============================================================
+
+# discard changes in all files that contains "pattern"
+rg "import \{ Status \}" -l | xargs git reset
+rg "import \{ Status \}" -l | xargs git checkout
+
+code bash ==============================================================
+
+# Sync node version between local environments, @node/types, and CI
+#
+# CI decides
+# .nvmrc defines node version in local environments
+# @types/node is managed by package manager
+
+yq '.web-client.image' $(git rev-parse --show-toplevel)/gitlab/.gitlab-ci-merge.yml \
+    | xargs -I {} docker run --rm --entrypoint= {} node --version > .nvmrc && cat .nvmrc \
+    | xargs -I {} yarn add @types/node@{}
+
+code bash ==============================================================
+
+# git commands
+git add -u
+git commit -m "Headline" -m "Body."
+git commit --amend
+git commit --fixup {commit}
+git rebase --interactive
+git branch -a | fzf | git checkout
+git bisect
